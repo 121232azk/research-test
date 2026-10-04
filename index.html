@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yeldra — Paie-toi mieux, sans travailler plus.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x/dist/cdn.min.js"></script>
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></init>
+  <script>
+    // Tailwind config: exact brand colors from the provided CSS style guide
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            // Brand hues from the provided CSS variables
+            'ink': '#1e2030',
+            'ink-foreground': '#f4f5f9',
+            'ink-muted': '#aeb0bb',
+            'ink-subtle': '#777a85',
+            'ink-line': '#3d3f4c',
+            'ink-surface': '#2f3241',
+            'background': '#f5f6fb',
+            'foreground': '#18181c',
+            'card': '#ffffff',
+            'card-foreground': '#18181c',
+            'primary': '#7b61ff',            // oklch(.64 .16 277) approx
+            'primary-hover': '#6b52e6',
+            'primary-active': '#5a3fe6',
+            'primary-light': '#abadec',
+            'primary-xlight': '#dadbf8',
+            'primary-foreground': '#fafafa',
+            'teal': '#30a06a',
+            'teal-soft': '#bcf9d3',
+            'info': '#2463ef',
+            'muted': '#f4f4f5',
+            'muted-foreground': '#5a5a61',
+            'accent': '#abadec',
+            'accent-foreground': '#7b61ff',
+            'border': '#d8d9e0',
+            'input': '#f4f4f5',
+            'ring': '#abadec',
+            'success': '#30a06a',
+            'chart-1': '#7b61ff',
+            'chart-2': '#c76ac0',
+            'chart-3': '#e97074',
+            'chart-4': '#ed9658',
+            'chart-5': '#e4bb5f',
+          },
+          fontFamily: {
+            sans: ['"Geist Sans"', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"Geist Mono"', 'ui-monospace', 'Menlo', 'Monaco', 'monospace'],
+            display: ['"Playfair Display"', 'Georgia', 'serif'],
+          },
+          borderRadius: {
+            lg: '0.75rem',       // var(--radius)
+            xl: '1rem',           // var(--radius-2xl)
+            '2xl': '1.5rem',      // var(--radius-3xl)
+          },
+          boxShadow: {
+            // Layered, color-tinted shadows (not flat shadow-md)
+            'ink-sm': '0 1px 3px rgba(26, 26, 46, 0.08), 0 1px 2px rgba(26, 26, 46, 0.05)',
+            'ink-md': '0 4px 6px rgba(26, 26, 46, 0.10), 0 2px 4px rgba(26, 26, 46, 0.05), 0 8px 16px rgba(26, 26, 46, 0.04)',
+            'ink-lg': '0 8px 20px rgba(26, 26, 46, 0.12), 0 4px 8px rgba(26, 26, 46, 0.07), 0 16px 32px rgba(26, 26, 46, 0.06)',
+            'purple-sm': '0 1px 3px rgba(123, 97, 255, 0.15), 0 1px 2px rgba(123, 97, 255, 0.08)',
+            'purple-md': '0 4px 12px rgba(123, 97, 255, 0.18), 0 2px 4px rgba(123, 97, 255, 0.10), 0 8px 16px rgba(123, 97, 255, 0.08)',
+          },
+        },
+      },
+      plugins: [],
+    };
+  </script>
+  <style>
+    /* CSS Custom Properties matching the provided style guide */
+    :root {
+      --ink: #1e2030;
+      --ink-foreground: #f4f5f9;
+      --ink-muted: #aeb0bb;
+      --ink-subtle: #777a85;
+      --ink-line: #3d3f4c;
+      --ink-surface: #2f3241;
+      --background: #f5f6fb;
+      --foreground: #18181c;
+      --card: #ffffff;
+      --card-foreground: #18181c;
+      --primary: #7b61ff;
+      --primary-hover: #6b52e6;
+      --teal: #30a06a;
+      --info: #2463ef;
+      --border: #d8d9e0;
+      --muted-foreground: #5a5a61;
+      --ring: #abadec;
+      --brand-hue: 277;
+      --radius: 0.75rem;
+      --radius-2xl: 1rem;
+      --radius-3xl: 1.5rem;
+    }
+
+    /* Base typography & layout */
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    body {
+      background-color: var(--background);
+      color: var(--foreground);
+      font-family: "Geist Sans", Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Layout tokens for consistent spacing */
+    .section-gap { padding-top: 4rem; padding-bottom: 4rem; }
+    @media (min-width: 768px) { .section-gap { padding-top: 6rem; padding-bottom: 6rem; } }
+    @media (min-width: 1024px) { .section-gap { padding-top: 8rem; padding-bottom: 8rem; } }
+
+    .container {
+      max-width: 80rem; /* 1280px; Tailwind default max-w-7xl is 80rem */
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    @media (min-width: 640px) { .container { padding-left: 1.5rem; padding-right: 1.5rem; } }
+    @media (min-width: 1024px) { .container { padding-left: 4rem; padding-right: 4rem; } }
+
+    /* Hero headline: tight tracking */
+    .hero-headline {
+      letter-spacing: -0.025em;
+      line-height: 1.05;
+    }
+
+    /* SVG noise overlay for texture depth */
+    .noise {
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise-filter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise-filter)'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+    }
+
+    /* Gradient overlays */
+    .gradient-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(123, 97, 255, 0.05) 0%, rgba(123, 97, 255, 0.02) 100%);
+      pointer-events: none;
+    }
+
+    /* Liquid Glass Button — glassmorphism with distortion effect */
+    .liquid-glass-button {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      border-radius: 0.5rem;
+      padding: 1rem 1.5rem;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.25s cubic-bezier(0.1, 0.4, 0.2, 1);
+      cursor: pointer;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: linear-gradient(135deg, rgba(123, 97, 255, 0.3), rgba(123, 97, 255, 0.15));
+      color: #ffffff;
+      backdrop-filter: blur(12px) saturate(188%);
+      -webkit-backdrop-filter: blur(12px) saturate(188%);
+      /* Layer: highlight gloss */
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+        0 4px 12px rgba(123, 97, 255, 0.25);
+      transform: translateY(0) scale(1);
+      will-change: transform, box-shadow;
+      outline: none;
+    }
+
+    .liquid-glass-button::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: calc(0.5rem + 1px);
+      pointer-events: none;
+      /* Outer glow border */
+      border: 1px solid transparent;
+      background: transparent;
+      z-index: 0;
+    }
+
+    /* Inner shine overlay */
+    .liquid-glass-button::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 0.5rem;
+      pointer-events: none;
+      background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.25) 0%,
+        rgba(255, 255, 255, 0.05) 50%,
+        transparent 100%);
+      z-index: 1;
+    }
+
+    .liquid-glass-button span,
+    .liquid-glass-button > *:not(svg):not(.glass-shine) {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Hover state: brightness boost + subtle scale */
+    .liquid-glass-button:hover {
+      filter: brightness(1.1);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+        0 8px 20px rgba(123, 97, 255, 0.35);
+      transform: translateY(-1px) scale(1.02);
+    }
+
+    /* Active / pressed state */
+    .liquid-glass-button:active {
+      transform: translateY(1px) scale(0.98);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+        0 2px 6px rgba(123, 97, 255, 0.2);
+    }
+
+    /* Focus-visible ring */
+    .liquid-glass-button:focus-visible {
+      outline: 2px solid #abadec;
+      outline-offset: 2px;
+    }
+
+    .liquid-glass-button:focus-visible:hover {
+      outline: none;
+    }
+
+    /* Custom focus ring */
+    .focus-ring:focus-visible {
+      outline: 2px solid var(--ring);
+      outline-offset: 2px;
+    }
+
+    /* Card hover lift */
+    .card-hover {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Brand gradient for CTAs */
+    .brand-gradient {
+      background: linear-gradient(118deg, #7b61ff 0%, #6b52e6 100%);
+    }
+
+    /* Step number circle */
+    .step-number {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      background: var(--primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--primary-foreground);
+      flex-shrink: 0;
+    }
+
+    /* Pricing toggle switch */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 3.5rem;
+      height: 1.75rem;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: var(--muted);
+      transition: .25s;
+      border-radius: 9999px;
+    }
+    .slider:before {
+      content: "";
+      position: absolute;
+      height: 1.25rem;
+      width: 1.25rem;
+      left: 0.25rem;
+      bottom: 0.25rem;
+      background-color: white;
+      transition: .25s;
+      border-radius: 50%;
+    }
+    input:checked + .slider { background-color: var(--primary); }
+    input:checked + .slider:before { transform: translateX(1.75rem); }
+
+    /* Accordion styling */
+    .accordion-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .accordion-content {
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .accordion-content.hidden {
+      max-height: 0;
+    }
+    .accordion-content.open {
+      max-height: 50rem;
+    }
+  </style>
+</head>
+<body class="bg-background text-foreground antialiased">
+
+  <!-- === Header === -->
+  <header class="sticky top-0 z-40 bg-card border-b border-border transition-shadow duration-200" id="header">
+    <div class="container flex h-16 items-center justify-between">
+      <!-- Logo -->
+      <a href="/" class="text-2xl font-display font-bold text-primary">
+        Yeldra
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden lg:flex items-center gap-8">
+        <a href="/#benefices" class="text-sm font-medium text-foreground hover:text-primary transition-colors focus-ring">Pourquoi Yeldra&nbsp;?</a>
+        <a href="/#methode" class="text-sm font-medium text-foreground hover:text-primary transition-colors focus-ring">Méthode</a>
+        <a href="/#tarif" class="text-sm font-medium text-foreground hover:text-primary transition-colors focus-ring">Tarif</a>
+        <a href="/#faq" class="text-sm font-medium text-foreground hover:text-primary transition-colors focus-ring">FAQ</a>
+        <a href="/simulateur" class="text-sm font-medium text-foreground hover:text-primary transition-colors focus-ring">Simulateur</a>
+        <a href="/blog" class="text-sm font-medium text-foreground hover:text-primary transition-colors focus-ring">Blog</a>
+      </nav>
+
+      <!-- Desktop Actions -->
+      <div class="flex items-center gap-3">
+        <a href="/connexion" class="hidden sm:inline-flex items-center justify-center rounded-lg font-medium text-sm transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:ring-ring/50 h-9 px-4 text-ink-muted hover:text-ink hover:bg-muted focus-ring">
+          Se connecter
+        </a>
+        <a href="/inscription" class="inline-flex items-center justify-center rounded-lg font-semibold text-sm h-9 px-5 transition-[background-color,box-shadow] focus-visible:ring-[3px] focus-visible:ring-ring/50 text-primary-foreground bg-primary hover:bg-primary-hover active:bg-primary-active shadow-[0_1px_3px_rgba(40,40,48,0.14)] focus-ring">
+          Essayer gratuitement
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- === Hero Section === -->
+  <section class="relative bg-background pt-14 pb-20 overflow-hidden" style="background: linear-gradient(135deg, #f5f6fb 0%, #eef1fb 100%);">
+    <!-- Background gradient overlays -->
+    <div class="absolute -top-40 -right-40 w-96 h-96 bg-primary opacity-3 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-teal opacity-5 rounded-full blur-3xl"></div>
+
+    <div class="container relative pt-12 pb-10 sm:pt-16 sm:pb-12 lg:pt-20 lg:pb-16">
+      <div class="grid gap-10 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-16">
+        <!-- Hero Text -->
+        <div class="flex flex-col items-start gap-6">
+          <h1 class="hero-headline text-4xl font-display font-extrabold text-ink sm:text-5xl md:text-5xl lg:text-6xl tracking-tight leading-[1.05]">
+            Paie-toi mieux,
+            <span class="text-primary italic">sans travailler plus.</span>
+          </h1>
+
+          <p class="text-lg text-ink-muted leading-relaxed max-w-lg">
+            Construis une activité rentable, saine et durable, à chaque étape de son développement. Reprends le contrôle de ton taux horaire réel et fixe le juste prix pour chaque offre, en fonction du temps que tu peux vraiment y consacrer.
+          </p>
+
+          <a href="/inscription" class="inline-flex items-center justify-center rounded-xl font-semibold text-base h-12 px-8 liquid-glass-button transition-[background-color,box-shadow] focus-visible:ring-[3px] focus-visible:ring-ring/50 text-primary-foreground bg-primary hover:bg-primary-hover active:bg-primary-active shadow-[0_1px_3px_rgba(40,40,48,0.14)] focus-ring">
+            Créer mon compte gratuitement
+          </a>
+
+          <p class="text-sm text-ink-muted">Plan gratuit sans limite de durée, sans carte bancaire.</p>
+
+          <!-- Quote testimonial -->
+          <div class="flex flex-col items-start gap-3 pt-4 border-t border-ink-line/20">
+            <p class="text-sm italic text-ink-muted leading-relaxed">
+              « Si l'outil coûtait 10x son prix, ça vaudrait le coup. »
+            </p>
+            <p class="text-sm font-medium text-ink">
+              Laurine Blandin, Consultante pour les restaurateurs
+            </p>
+          </div>
+        </div>
+
+        <!-- Hero Graphic: Dashboard visualization -->
+        <div class="relative aspect-[4/3] max-w-md lg:max-w-full rounded-3xl overflow-hidden shadow-ink-md bg-ink flex-shrink-0">
+          <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-info/10"></div>
+
+          <!-- Dashboard mock content -->
+          <div class="relative h-full p-4 flex flex-col gap-3">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex gap-2">
+                <div class="w-3 h-3 rounded-full bg-primary"></div>
+                <div class="w-3 h-3 rounded-full bg-info"></div>
+                <div class="w-3 h-3 rounded-full bg-ink-muted"></div>
+              </div>
+              <div class="text-xs text-ink-muted font-mono">Oct 2024</div>
+            </div>
+
+            <!-- Chart area -->
+            <div class="flex-1 flex items-end gap-1">
+              <div class="flex-1 flex flex-col-reverse items-center gap-0.5">
+                <div class="w-full h-4 bg-teal/40 rounded"></div>
+                <div class="w-full h-8 bg-info/40 rounded"></div>
+                <div class="w-full h-12 bg-primary/40 rounded"></div>
+                <div class="w-full h-6 bg-teal/60 rounded"></div>
+                <div class="w-full h-10 bg-info/60 rounded"></div>
+              </div>
+              <div class="flex-1 flex flex-col-reverse items-center gap-0.5">
+                <div class="w-full h-6 bg-primary/40 rounded"></div>
+                <div class="w-full h-10 bg-teal/40 rounded"></div>
+                <div class="w-full h-4 bg-info/40 rounded"></div>
+                <div class="w-full h-8 bg-primary/60 rounded"></div>
+                <div class="w-full h-5 bg-info/60 rounded"></div>
+              </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-2">
+              <div class="bg-ink-surface/50 rounded-lg p-2 text-center">
+                <div class="text-lg font-bold text-ink">1 240€</div>
+                <div class="text-xs text-ink-muted">CA mensuel</div>
+              </div>
+              <div class="bg-ink-surface/50 rounded-lg p-2 text-center">
+                <div class="text-lg font-bold text-teal">840€</div>
+                <div class="text-xs text-ink-muted">Net imposé</div>
+              </div>
+              <div class="bg-ink-surface/50 rounded-lg p-2 text-center">
+                <div class="text-lg font-bold text-info">72 h</div>
+                <div class="text-xs text-ink-muted">Facturées</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === Core Benefits === -->
+  <section id="benefices" class="section-gap bg-background">
+    <div class="container">
+      <div class="mx-auto max-w-2xl text-center mb-12">
+        <h2 class="text-3xl font-display font-bold text-ink mb-4 tracking-tight">
+          Des décisions prises sur tes chiffres.
+        </h2>
+        <p class="text-ink-muted leading-relaxed">
+          Tu sais toujours quoi décider : quel prix fixer, quelle offre pousser, combien te verser. Et le mois où ça coince, tu le vois venir.
+        </p>
+      </div>
+
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <!-- Benefit 1 -->
+        <div class="card-hover bg-card rounded-2xl border border-border p-6 shadow-ink-sm">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7H7v10a2 2 0 002 2h6a2 2 0 002-2V9a2 2 0 00-2-2h-.5"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-ink mb-2">Offre la plus vendue ≠ la plus rémunératrice</h3>
+          <p class="text-sm text-ink-muted leading-relaxed">
+            Ton offre la plus vendue n'est pas celle qui te paie. Facture ce que ton travail coûte vraiment.
+          </p>
+        </div>
+
+        <!-- Benefit 2 -->
+        <div class="card-hover bg-card rounded-2xl border border-border p-6 shadow-ink-sm">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v16h16M4 4l4 4m-4-4l4-4m12 8H4"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-ink mb-2">Calcul en continu</h3>
+          <p class="text-sm text-ink-muted leading-relaxed">
+            Ce calcul tourne en continu. Tu corriges en cours d'année, pas au bilan.
+          </p>
+        </div>
+
+        <!-- Benefit 3 -->
+        <div class="card-hover bg-card rounded-2xl border border-border p-6 shadow-ink-sm">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-2.21 0-4.21.86-5.76 2.24S4 12.62 4 15.2v2.8h16v-2.8c0-1.79-.73-3.47-1.97-4.68S14.21 8 12 8z"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-ink mb-2">Un objectif qui d&eacute;crote se rattrape</h3>
+          <p class="text-sm text-ink-muted leading-relaxed">
+            La vie que tu veux devient un chiffre à atteindre. L'objectif qui décroit se rattrape tant qu'il reste des mois.
+          </p>
+        </div>
+
+        <!-- Benefit 4 -->
+        <div class="card-hover bg-card rounded-2xl border border-border p-6 shadow-ink-sm">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V5a2 2 0 00-2-2h-2a2 2 0 00-2 2v6m4 0v6m-4-6h4m-4 0l-2-2m6 2l2-2"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-ink mb-2">D&eacute;cide ton net, Yeldra remonte le calcul</h3>
+          <p class="text-sm text-ink-muted leading-relaxed">
+            Tu décides de ton net à toi, Yeldra remonte le calcul pour connaître le brut à facturer.
+          </p>
+        </div>
+
+        <!-- Benefit 5 -->
+        <div class="card-hover bg-card rounded-2xl border border-border p-6 shadow-ink-sm">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 7V3m-9 10v7m12-7v7M5 20h14a2 2 0 002-2V7H3v11a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-ink mb-2">Anticipe tes creux de tr&eacute;sorerie</h3>
+          <p class="text-sm text-ink-muted leading-relaxed">
+            Le mois où ça coince, tu le sais des mois à l'avance. D&eacute;cale une d&eacute;pense ou relance une facture.
+          </p>
+        </div>
+
+        <!-- Benefit 6 -->
+        <div class="card-hover bg-card rounded-2xl border border-border p-6 shadow-ink-sm">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.1-.9 2-2 2s-2-.9-2-2 0-8.53-.59-10.63A1.994 1.994 0 006 4c0 1.66-.62 3.18-1.66 4.34A1 1 0 006 12h12"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold text-ink mb-2">Tarification align&eacute;e sur tes objectifs</h3>
+          <p class="text-sm text-ink-muted leading-relaxed">
+            Plus besoin de deviner. Tarifie ton temps selon les résultats que tu veux, mois après mois.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-12 text-center">
+        <a href="/simulateur" class="inline-flex items-center justify-center rounded-xl font-semibold text-base h-12 px-8 liquid-glass-button transition-[background-color,box-shadow] focus-visible:ring-[3px] focus-visible:ring-ring/50 text-primary-foreground bg-primary hover:bg-primary-hover active:bg-primary-active shadow-[0_1px_3px_rgba(40,40,48,0.14)] focus-ring">
+          Calculer ma rentabilité
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- === Methodology === -->
+  <section id="methode" class="section-gap bg-ink text-ink-foreground relative overflow-hidden">
+    <div class="absolute inset-0 opacity-5">
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+            <path d="M 48 0 L 0 0 0 48" fill="none" stroke="currentColor" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid)" />
+      </svg>
+    </div>
+
+    <div class="container relative">
+      <div class="mx-auto max-w-3xl text-center mb-14">
+        <h2 class="text-3xl font-display font-bold text-ink-foreground mb-4 tracking-tight">
+          Ta stratégie en quatre étapes.
+        </h2>
+        <p class="text-ink-muted leading-relaxed">
+          Du seuil de rentabilité au suivi au réel : la d&eacute;marche pour construire une activit&eacute; qui te paie correctement, chaque mois.
+        </p>
+      </div>
+
+      <!-- Steps -->
+      <div class="grid gap-10 md:grid-cols-2">
+        <!-- Step 1 -->
+        <div class="flex gap-4">
+          <div class="step-number flex-shrink-0">01</div>
+          <div>
+            <h3 class="text-lg font-semibold text-ink-foreground mb-2">
+              D&eacute;couvre le CA minimum pour bien te payer.
+            </h3>
+            <p class="text-sm text-ink-muted leading-relaxed">
+              Yeldra calcule ton seuil de rentabilité, et le taux horaire minimum à viser pour l'atteindre sans t'&eacute;piduiner.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="flex gap-4 md:mt-0">
+          <div class="step-number flex-shrink-0">02</div>
+          <div>
+            <h3 class="text-lg font-semibold text-ink-foreground mb-2">
+              Construis des offres calibr&eacute;es sur ta rentabilit&eacute;.
+            </h3>
+            <p class="text-sm text-ink-muted leading-relaxed">
+              D&eacute;finit tes produits et services, fixe des tarifs et des objectifs de vente coh&eacute;rents pour atteindre puis d&eacute;passer ton seuil.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="flex gap-4">
+          <div class="step-number flex-shrink-0">03</div>
+          <div>
+            <h3 class="text-lg font-semibold text-ink-foreground mb-2">
+              Anticipe tes d&eacute;penses, prot&egrave;ge ta marge.
+            </h3>
+            <p class="text-sm text-ink-muted leading-relaxed">
+              Int&egrave;gre tes charges et frais professionnels pour savoir ce qu'il te reste vraiment &agrave; chaque euro factur&eacute;.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="flex gap-4 md:mt-0">
+          <div class="step-number flex-shrink-0">04</div>
+          <div>
+            <h3 class="text-lg font-semibold text-ink-foreground mb-2">
+              Suis le r&eacute;el, ajuste toute l'ann&eacute;e.
+            </h3>
+            <p class="text-sm text-ink-muted leading-relaxed">
+              Enregistre tes ventes et d&eacute;penses, compare-les &agrave; ton pr&eacute;visionnel, et affine ta strat&eacute;gie au fil des mois.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-14 text-center">
+        <a href="/inscription" class="inline-flex items-center justify-center rounded-xl font-semibold text-base h-12 px-8 liquid-glass-button transition-[background-color,box-shadow] focus-visible:ring-[3px] focus-visible:ring-ring/50 text-primary-foreground bg-primary hover:bg-primary-hover active:bg-primary-active shadow-[0_1px_3px_rgba(40,40,48,0.14)] focus-ring">
+          Construire mon pr&eacute;visionnel
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- === Target Audience === -->
+  <section id="audience" class="section-gap bg-card">
+    <div class="container">
+      <div class="mx-auto max-w-2xl text-center mb-12">
+        <h2 class="text-3xl font-display font-bold text-ink mb-4 tracking-tight">
+          Pens&eacute; pour les freelances qui vendent leur expertise.
+        </h2>
+        <p class="text-ink-muted leading-relaxed">
+          Tu factures ton temps et ton savoir-faire en prestation de service&nbsp;? Yeldra calibre ta rentabilit&eacute;, quel que soit ton m&eacute;tier.
+        </p>
+      </div>
+
+      <div class="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <!-- Audience items -->
+        <a href="/blog/tarifs-freelance-graphiste-2026" class="card-hover group flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/30 transition-[background-color,border-color,box-shadow] focus-ring">
+          <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l10-10-10-10"></path>
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-ink">Graphistes &amp; designers</span>
+        </a>
+
+        <a href="/blog/tarifs-freelance-developpeur-2026" class="card-hover group flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/30 transition-[background-color,border-color,box-shadow] focus-ring">
+          <div class="w-10 h-10 bg-info/10 rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-info" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-10-4-6v16zM4 12h16"></path>
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-ink">D&eacute;veloppeurs web &amp; mobile</span>
+        </a>
+
+        <a href="/blog/tarifs-freelance-marketing-growth-2026" class="card-hover group flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/30 transition-[background-color,border-color,box-shadow] focus-ring">
+          <div class="w-10 h-10 bg-teal/10 rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 6l6 6-6 6M6 12h12"></path>
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-ink">Marketers &amp; growth</span>
+        </a>
+
+        <a href="/blog/tarifs-freelance-redacteur-2026" class="card-hover group flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/30 transition-[background-color,border-color,box-shadow] focus-ring">
+          <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5 5-5m7 0l-5 5 5 5"></path>
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-ink">R&eacute;dacteurs &amp; copywriters</span>
+        </a>
+
+        <a href="/blog/tarifs-freelance-seo-sea-2026" class="card-hover group flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/30 transition-[background-color,border-color,box-shadow] focus-ring">
+          <div class="w-10 h-10 bg-info/10 rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-info" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-ink">Consultants SEO / SEA</span>
+        </a>
+
+        <a href="/blog/tarifs-freelance-ux-ui-designer-2026" class="card-hover group flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/30 transition-[background-color,border-color,box-shadow] focus-ring">
+          <div class="w-10 h-10 bg-teal/10 rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18l.89.89A2 2 0 0015 20h7a1 1 0 01-1 1h-2a2 2 0 110-4h2a1 1 0 001-1V8.11a2 2 0 00-.89-1.71L12 2 2 7v.1A2 2 0 002 9v8a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-ink">UX / UI designers</span>
+        </a>
+
+        <a href="/blog/tarifs-freelance-photographe-videoaste-2026" class="card-hover group flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/30 transition-[background-color,border-color,box-shadow] focus-ring">
+          <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 011.66.89l.85.97a2 2 0 001.66.89H15a2 2 0 012 2v6a2 2 0 01-2 2H7a2 2 0 01-2-2V9z"></path>
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-ink">Photographes &amp; vid&eacute;astes</span>
+        </a>
+
+        <a href="/blog/tarifs-freelance-coach-formateur-2026" class="card-hover group flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/30 transition-[background-color,border-color,box-shadow] focus-ring">
+          <div class="w-10 h-10 bg-info/10 rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-info" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.11 11.5l6.37 3.86 6.37-3.86-6.37-3.86z"></path>
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-ink">Coachs &amp; formateurs</span>
+        </a>
+
+        <a href="/blog/tarifs-freelance-consultant-expert-2026" class="card-hover group flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/30 transition-[background-color,border-color,box-shadow] focus-ring">
+          <div class="w-10 h-10 bg-teal/10 rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h3l3 3v3l-6 3v-9z"></path>
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-ink">Consultants &amp; experts</span>
+        </a>
+
+        <a href="/blog/tarifs-freelance-community-manager-2026" class="card-hover group flex items-center gap-3 p-4 rounded-xl border border-border bg-background hover:bg-muted/30 transition-[background-color,border-color,box-shadow] focus-ring">
+          <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9a3 3 0 100 6 3 3 0 000-6zM4 9h2a3 3 0 100 6H4a3 3 0 010-6zm14 0h2a3 3 0 100 6h-2a3 3 0 010-6z"></path>
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-ink">Community managers</span>
+        </a>
+      </div>
+
+      <div class="mt-12 text-center">
+        <a href="/inscription" class="inline-flex items-center justify-center rounded-xl font-semibold text-base h-12 px-8 liquid-glass-button transition-[background-color,box-shadow] focus-visible:ring-[3px] focus-visible:ring-ring/50 text-primary-foreground bg-primary hover:bg-primary-hover active:bg-primary-active shadow-[0_1px_3px_rgba(40,40,48,0.14)] focus-ring">
+          Cr&eacute;er mon compte gratuitement
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- === Testimonials === -->
+  <section id="temoignages" class="section-gap bg-card">
+    <div class="container">
+      <div class="mx-auto max-w-2xl text-center mb-14">
+        <h2 class="text-3xl font-display font-bold text-ink mb-4 tracking-tight">
+          Ils ont repens&eacute; leurs offres et leurs prix.
+        </h2>
+      </div>
+
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <!-- Testimonial 1 -->
+        <div class="card-hover bg-background rounded-2xl border border-border p-6 shadow-ink-sm">
+          <p class="text-sm italic text-ink-muted leading-relaxed mb-4">
+            &laquo; J'ai fait x2 sur mes tarifs, augment&eacute; ma rentabilit&eacute;, et j'ai plus de monde qu'avant sans &ecirc;tre sous l'eau. &raquo;
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-muted flex-shrink-0"></div>
+            <div>
+              <p class="font-medium text-ink">Marie-H&eacute;l&egrave;ne Tommasino</p>
+              <p class="text-sm text-ink-muted">Consultante en d&eacute;veloppement commercial</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div class="card-hover bg-background rounded-2xl border border-border p-6 shadow-ink-sm">
+          <p class="text-sm italic text-ink-muted leading-relaxed mb-4">
+            &laquo; J'ai supprim&eacute; certaines offres, r&eacute;valu&eacute; mes prix et, surtout, gagn&eacute; une clart&eacute; incroyable sur les volumes de ventes &agrave; r&eacute;aliser pour ma croissance. &raquo;
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-muted flex-shrink-0"></div>
+            <div>
+              <p class="font-medium text-ink">Emilie Chollet</p>
+              <p class="text-sm text-ink-muted">Experte en &eacute;tudes Marketing B2B/B2C</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div class="card-hover bg-background rounded-2xl border border-border p-6 shadow-ink-sm">
+          <p class="text-sm italic text-ink-muted leading-relaxed mb-4">
+            &laquo; Je sais &agrave; chaque instant combien je gagne en net, combien je dois vendre en brut, quand et combien d&eacute;penser, et quel ROI viser. Si l'outil co&ucirc;tait 10x son prix, &ccedila vaudrait le coup. &raquo;
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-muted flex-shrink-0"></div>
+            <div>
+              <p class="font-medium text-ink">Laurine Blandin</p>
+              <p class="text-sm text-ink-muted">Consultante pour les restaurateurs</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === Pricing === -->
+  <section id="tarif" class="section-gap bg-card">
+    <div class="container">
+      <div class="mx-auto max-w-3xl text-center mb-14">
+        <h2 class="text-3xl font-display font-bold text-ink mb-4 tracking-tight">
+          Commence gratuitement. Pour de bon.
+        </h2>
+        <p class="text-ink-muted leading-relaxed">
+          Pas d'essai qui expire, pas de carte bancaire.
+          Le premium arrive le jour o&ugrave; tu veux comparer plusieurs offres.
+        </p>
+      </div>
+
+      <!-- Pricing toggle -->
+      <div class="flex justify-center items-center gap-4 mb-10">
+        <span class="text-sm font-medium text-ink-muted">Mensuel</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="pricing-toggle" class="hidden">
+          <span class="slider"></span>
+        </label>
+        <span class="text-sm font-medium text-ink-muted">Annuel</span>
+      </div>
+
+      <div class="grid gap-8 lg:grid-cols-2 lg:gap-10">
+        <!-- Free Tier -->
+        <div class="relative flex flex-col rounded-3xl border border-border bg-background p-8 shadow-ink-sm">
+          <h3 class="text-xl font-semibold text-ink mb-2">Plan gratuit</h3>
+          <p class="text-ink-muted mb-6">Sans limite de dur&eacute;e</p>
+
+          <div class="mb-6">
+            <span class="text-4xl font-bold text-ink">0&nbsp;&euro;</span>
+            <span class="text-sm text-ink-muted"> / mois</span>
+          </div>
+
+          <p class="text-sm text-ink-muted mb-6">
+            Factur&eacute; 0&euro; chaque mois, tant que tu n'as qu'un produit ou service.
+          </p>
+
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-start gap-3">
+              <svg class="w-4 h-4 text-teal mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span class="text-sm text-ink">B&acirc;tis ton pr&eacute;visionnel sur un produit ou service</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-4 h-4 text-teal mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span class="text-sm text-ink">Ton taux horaire r&eacute;el, pour ne plus sous-facturer</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-4 h-4 text-teal mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span class="text-sm text-ink">Le CA minimum &agrave; viser pour bien te payer</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-4 h-4 text-teal mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span class="text-sm text-ink">Ta tr&eacute;sorerie mois par mois, TVA comprise</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-4 h-4 text-teal mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span class="text-sm text-ink">Le suivi au r&eacute;el de tes ventes et de tes d&eacute;penses</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-4 h-4 text-teal mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span class="text-sm text-ink">1 entreprise et 1 produit ou service</span>
+            </li>
+          </ul>
+
+          <a href="/inscription" class="mt-auto inline-flex items-center justify-center rounded-xl font-semibold text-base h-12 px-8 liquid-glass-button transition-[background-color,box-shadow] focus-visible:ring-[3px] focus-visible:ring-ring/50 text-primary-foreground bg-primary hover:bg-primary-hover active:bg-primary-active shadow-[0_1px_3px_rgba(40,40,48,0.14)] focus-ring">
+            Cr&eacute;er mon compte gratuitement
+          </a>
+        </div>
+
+        <!-- Premium Tier -->
+        <div class="relative flex flex-col rounded-3xl border-2 border-primary bg-primary/5 p-8 shadow-ink-lg">
+          <h3 class="text-xl font-semibold text-ink mb-2 flex items-center gap-2">
+            Premium
+            <span class="text-sm font-medium text-primary bg-primary/10 px-2.5 py-0.5 rounded-full">Populaire</span>
+          </h3>
+          <p class="text-ink-muted mb-6">Sans engagement, annulable &agrave; tout moment</p>
+
+          <div class="mb-6">
+            <span class="text-4xl font-bold text-ink">9,99&nbsp;&euro;</span>
+            <span class="text-sm text-ink-muted"> HT / mois</span>
+          </div>
+
+          <p class="text-sm text-ink-muted mb-6">
+            B&acirc;tis ta strat&eacute;gie en toute autonomie. Tout ce qui est inclus dans le plan gratuit, plus :
+          </p>
+
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-start gap-3">
+              <svg class="w-4 h-4 text-teal mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span class="text-sm text-ink">Autant de produits et services que tu veux, pour les comparer et arbitrer</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-4 h-4 text-teal mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span class="text-sm text-ink">Jusqu'à 3 entreprises dans un seul compte</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-4 h-4 text-teal mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span class="text-sm text-ink">Compare plusieurs offres et simule tes marges</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-4 h-4 text-teal mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              <span class="text-sm text-ink">Priorise les offres les plus rentables</span>
+            </li>
+          </ul>
+
+          <div class="mt-auto mb-4">
+            <p class="text-center text-sm text-ink-muted mb-1">
+              Factur&eacute; 65&euro; de l&rsquo;heure, Yeldra est rembours&eacute; en moins de 2 heures factur&eacute;es sur l&rsquo;ann&eacute;e.
+            </p>
+          </div>
+
+          <a href="/inscription" class="inline-flex items-center justify-center rounded-xl font-semibold text-base h-12 px-8 liquid-glass-button transition-[background-color,box-shadow] focus-visible:ring-[3px] focus-visible:ring-ring/50 text-primary-foreground bg-primary hover:bg-primary-hover active:bg-primary-active shadow-[0_1px_3px_rgba(40,40,48,0.14)] focus-ring">
+            Passer au Premium
+          </a>
+        </div>
+      </div>
+
+      <p class="mt-10 text-center text-sm text-ink-muted">
+        Tu peux passer au Premium &agrave; tout moment, dans ton espace.
+      </p>
+    </div>
+  </section>
+
+  <!-- === FAQ === -->
+  <section id="faq" class="section-gap bg-ink text-ink-foreground">
+    <div class="container">
+      <div class="mx-auto max-w-2xl text-center mb-12">
+        <h2 class="text-3xl font-display font-bold text-ink-foreground mb-4 tracking-tight">
+          Questions fr&eacute;quentes
+        </h2>
+        <p class="text-ink-muted leading-relaxed">
+          Tout ce qu'il faut savoir pour d&eacute;marrer et utiliser Yeldra.
+        </p>
+      </div>
+
+      <div class="space-y-2">
+        <!-- FAQ Item 1 -->
+        <div class="accordion-item">
+          <button type="button"
+                  class="faq-button flex w-full items-center justify-between text-left py-5 font-medium text-ink-foreground hover:text-primary transition-colors focus-ring"
+                  data-faq="1">
+            <span>&Agrave; qui s'adresse Yeldra&nbsp;?</span>
+            <svg class="w-5 h-5 text-ink-muted transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="icon-1">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+          </button>
+          <div id="faq-1" class="accordion-content hidden">
+            <p class="text-sm text-ink-muted leading-relaxed pb-5">
+              Yeldra s'adresse &agrave; tous les freelances et micro-entrepreneurs qui facturent &agrave; l'heure ou &agrave; forfait. Que tu sois graphiste, d&eacute;veloppeur, consultant, coach ou community manager, Yeldra t'aide &agrave; fixer le juste prix.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ Item 2 -->
+        <div class="accordion-item">
+          <button type="button"
+                  class="faq-button flex w-full items-center justify-between text-left py-5 font-medium text-ink-foreground hover:text-primary transition-colors focus-ring"
+                  data-faq="2">
+            <span>Facture-t-on le même tarif partout&nbsp;?</span>
+            <svg class="w-5 h-5 text-ink-muted transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="icon-2">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+          </button>
+          <div id="faq-2" class="accordion-content hidden">
+            <p class="text-sm text-ink-muted leading-relaxed pb-5">
+              Non. Tu peux fixer des tarifs diff&eacute;rents selon les offres, les clients ou les p&eacute;riodes. Yeldra te permet de suivre chaque offre s&eacute;par&eacute;ment pour compare ta rentabilit&eacute; r&eacute;ellement.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ Item 3 -->
+        <div class="accordion-item">
+          <button type="button"
+                  class="faq-button flex w-full items-center justify-between text-left py-5 font-medium text-ink-foreground hover:text-primary transition-colors focus-ring"
+                  data-faq="3">
+            <span>Yeldra remplace-t-il un expert-comptable&nbsp;?</span>
+            <svg class="w-5 h-5 text-ink-muted transition-transform duration-200" fill="no ne" stroke="currentColor" viewBox="0 0 24 24" id="icon-3">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+          </button>
+          <div id="faq-3" class="accordion-content hidden">
+            <p class="text-sm text-ink-muted leading-relaxed pb-5">
+              Non. Yeldra est un outil de pr&eacute;vision et de pilotage de ta rentabilit&eacute;. Ton expert-comptable reste indispensable pour la d&eacute;claration fiscale et la paie. Yeldra te donne les chiffres &agrave; partager avec lui.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ Item 4 -->
+        <div class="accordion-item">
+          <button type="button"
+                  class="faq-button flex w-full items-center justify-between text-left py-5 font-medium text-ink-foreground hover:text-primary transition-colors focus-ring"
+                  data-faq="4">
+            <span>Est-ce que c'est s&ucirc;r&nbsp;?</span>
+            <svg class="w-5 h-5 text-ink-muted transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="icon-4">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+          </button>
+          <div id="faq-4" class="accordion-content hidden">
+            <p class="text-sm text-ink-muted leading-relaxed pb-5">
+              Oui. Tes donn&eacute;es sont chiffr&eacute;es en transit et au repos (AES-256). Tu peux exporter ou supprimer ton compte &agrave; tout moment.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === Footer CTA + Footer === -->
+  <footer class="bg-ink text-ink-foreground">
+    <div class="container py-8 border-t border-ink-line">
+      <!-- Footer CTA -->
+      <div class="rounded-2xl bg-ink-surface/50 p-8 text-center mb-8">
+        <h3 class="text-xl font-semibold text-ink-foreground mb-3">
+          Prêt &agrave; repens&eacute; votre tarification&nbsp;?
+        </h3>
+        <a href="/inscription" class="inline-flex items-center justify-center rounded-xl font-semibold text-base h-10 px-6 transition-[background-color,box-shadow] focus-visible:ring-[3px] focus-visible:ring-ring/50 text-primary-foreground bg-primary hover:bg-primary-hover active:bg-primary-active shadow-[0_1px_3px_rgba(40,40,48,0.14)] focus-ring">
+          Cr&eacute;er mon compte gratuitement
+        </a>
+      </div>
+
+      <div class="grid gap-8 md:grid-cols-4 text-center md:text-left">
+        <div>
+          <div class="text-xl font-bold text-primary mb-3">Yeldra</div>
+          <p class="text-sm text-ink-muted">
+            Outil de pilotage de la rentabilit&eacute; pour freelance.<br>
+            &copy; 2024 Yeldra.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-sm font-semibold text-ink-foreground mb-3">Produit</h4>
+          <ul class="space-y-2">
+            <li><a href="/simulateur" class="text-sm text-ink-muted hover:text-ink transition-colors focus-ring">Simulateur</a></li>
+            <li><a href="/#methode" class="text-sm text-ink-muted hover:text-ink transition-colors focus-ring">M&eacute;thode</a></li>
+            <li><a href="/blog" class="text-sm text-ink-muted hover:text-ink transition-colors focus-ring">Blog</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-sm font-semibold text-ink-foreground mb-3">L&eacute;gal</h4>
+          <ul class="space-y-2">
+            <li><a href="/mentions-legales" class="text-sm text-ink-muted hover:text-ink transition-colors focus-ring">Mentions l&eacute;gales</a></li>
+            <li><a href="/cgu" class="text-sm text-ink-muted hover:text-ink transition-colors focus-ring">CGU</a></li>
+            <li><a href="/politique-confidentialite" class="text-sm text-ink-muted hover:text-ink transition-colors focus-ring">Politique de confidentialit&eacute;</a></li>
+            <li><a href="/contact" class="text-sm text-ink-muted hover:text-ink transition-colors focus-ring">Contact</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-sm font-semibold text-ink-foreground mb-3">Suivez-nous</h4>
+          <div class="flex justify-center md:justify-start gap-3">
+            <a href="#" class="w-8 h-8 rounded-lg bg-ink-surface/50 flex items-center justify-center text-ink-muted hover:text-ink hover:bg-primary/10 transition-colors focus-ring">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3.11 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.79 1.91 3.57-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.64 18.78 5.9 20 8.51 20c10.3 0 15.87-8.51 15.87-15.91 0-.24-.01-.48-.02-.72.76-.56 1.42-1.27 1.97-2.12z"></path>
+              </svg>
+            </a>
+            <a href="#" class="w-8 h-8 rounded-lg bg-ink-surface/50 flex items-center justify-center text-ink-muted hover:text-ink hover:bg-primary/10 transition-colors focus-ring">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"></path>
+              </svg>
+            </a>
+            <a href="#" class="w-8 h-8 rounded-lg bg-ink-surface/50 flex items-center justify-center text-ink-muted hover:text-ink hover:bg-primary/10 transition-colors focus-ring">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 0C7.23 0 3.28 3.24 2.62 7.72C2.54 8.22 2.5 8.74 2.5 9.25 2.5 16.88 8.63 23 12 23c3.37 0 8.5-6.12 8.5-13.75 0-.36-.01-.71-.03-1.06C19.24 3.24 16.27 0 12 0zm0 21c-3.34 0-6.07-2.25-6.87-5.29 2.09 1.5 4.62 2.29 7.25 2.29.37 0 .73-.02 1.08-.07-1.13-.44-2.05-1.07-2.68-1.89-1.03-1.33-1.58-3-1.58-4.75 0-.62.07-1.21.2-1.77 1.78.88 3.82 1.41 6 .01 1.02-1.18 1.83-2.71 2.17-4.46C19.59 4.34 16.99 2 14 2 9.59 2 6 5.59 6 10c0 .62.08 1.22.22 1.79-3.06.58-5.65 2.69-7.08 5.55C1.29 16.07 2.33 18.89 4.75 20.85c.98.79 2.13 1.37 3.36 1.72.76-.56 1.42-1.27 1.97-2.12z"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- === Scripts === -->
+  <script>
+    // Header scroll shadow
+    const header = document.getElementById('header');
+    let scrolled = false;
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 10 && !scrolled) {
+        header.classList.add('shadow-md');
+        scrolled = true;
+      } else if (window.scrollY <= 10 && scrolled) {
+        header.classList.remove('shadow-md');
+        scrolled = false;
+      }
+    });
+
+    // FAQ Accordion
+    const faqButtons = document.querySelectorAll('.faq-button');
+    faqButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const faqId = button.getAttribute('data-faq');
+        const content = document.getElementById('faq-' + faqId);
+        const icon = document.getElementById('icon-' + faqId);
+
+        // Close all
+        document.querySelectorAll('.accordion-content').forEach(el => {
+          el.classList.remove('open');
+          el.classList.add('hidden');
+        });
+        document.querySelectorAll('#icon-\\d+ path').forEach(path => {
+          path.setAttribute('d', 'M12 4v16m8-8H4');
+        });
+
+        // Toggle clicked
+        if (content.classList.contains('hidden')) {
+          content.classList.remove('hidden');
+          content.classList.add('open');
+          icon.querySelector('path').setAttribute('d', 'M12 4v16m8-8H4');
+        }
+      });
+    });
+
+    // Mobile nav toggle (simplified - nav is hidden on mobile in this version)
+    // Pricing toggle
+    const pricingToggle = document.getElementById('pricing-toggle');
+    if (pricingToggle) {
+      pricingToggle.addEventListener('change', () => {
+        // Toggle pricing display between monthly/yearly
+        const prices = document.querySelectorAll('[data-yearly]');
+        prices.forEach(el => {
+          el.classList.toggle('hidden');
+        });
+      });
+    }
+  </script>
+</body>
+</html>

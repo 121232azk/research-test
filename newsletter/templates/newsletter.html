@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} - {{author}} - AI Newsletter System</title>
+    <meta name="description" content="AI Newsletter - {{topic}} insights and analysis">
+    <meta name="author" content="{{author}}">
+    <meta name="generator" content="AI Newsletter System v1.0">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            }
+
+            .container {
+                background: #1e1e1e;
+                color: #e0e0e0;
+            }
+        }
+
+        /* Animation keyframes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Header styles */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInUp 0.8s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.3em;
+            margin: 10px 0;
+            opacity: 0.95;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .meta {
+            font-size: 1em;
+            opacity: 0.8;
+            margin-top: 20px;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Content section */
+        .content {
+            padding: 50px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        /* Section styling */
+        .section {
+            margin: 40px 0;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #2d3748;
+            margin-bottom: 25px;
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h2::before {
+            content: '📊';
+            font-size: 0.9em;
+        }
+
+        .section h3 {
+            color: #4a5568;
+            margin: 30px 0 15px;
+            font-size: 1.4em;
+            border-left: 4px solid #667eea;
+            padding-left: 15px;
+        }
+
+        .section p {
+            margin-bottom: 20px;
+            color: #4a5568;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+
+        .section ul {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            list-style: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .section li {
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+            color: #4a5568;
+            line-height: 1.6;
+            transition: background 0.2s ease;
+        }
+
+        .section li:hover {
+            background: #f0f4f8;
+        }
+
+        .section li:last-child {
+            border-bottom: none;
+        }
+
+        /* Image gallery */
+        .image-gallery {
+            margin: 50px 0;
+            text-align: center;
+        }
+
+        .image-gallery h2 {
+            color: #2d3748;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .image-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .image-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .image-card .card-content {
+            padding: 20px;
+        }
+
+        .image-card .card-title {
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .image-card .card-description {
+            color: #718096;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        /* Call to action */
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 50px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .cta-section h3 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .cta-section p {
+            margin-bottom: 25px;
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            background: white;
+            color: #667eea;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .cta-button:hover {
+            background: #f0f4f8;
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .footer p {
+            margin: 10px 0;
+            opacity: 0.9;
+        }
+
+        .footer .links {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .footer .links a {
+            color: #3498db;
+            text-decoration: none;
+            margin: 0 15px;
+            transition: color 0.3s ease;
+        }
+
+        .footer .links a:hover {
+            color: #5dade2;
+            text-decoration: underline;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .image-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-section {
+                padding: 30px 20px;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .section {
+                background: #2d2d2d;
+            }
+
+            .section h2 {
+                color: #e2e8f0;
+            }
+
+            .section h3 {
+                color: #cbd5e0;
+            }
+
+            .section p,
+            .section li {
+                color: #cbd5e0;
+            }
+
+            .section li:hover {
+                background: #3a3a3a;
+            }
+
+            .image-card {
+                background: #3a3a3a;
+            }
+
+            .image-card .card-title {
+                color: #e2e8f0;
+            }
+
+            .image-card .card-description {
+                color: #a0aec0;
+            }
+        }
+
+        /* Utility classes */
+        .highlight {
+            background: linear-gradient(120deg, #ffeb3b 0%, #ffc107 100%);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .badge {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-left: 10px;
+        }
+
+        /* Metadata */
+        .metadata {
+            background: #f0f4f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            font-size: 0.95em;
+            color: #718096;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .metadata {
+                background: #1a2233;
+                color: #a0aec0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- METADATA_INJECTION -->
+
+    <div class="container">
+        <header class="header">
+            <h1>{{title}}</h1>
+            <p>by {{author}}</p>
+            <div class="meta">
+                <p>Published on {{date}}</p>
+                <p>AI Newsletter System v1.0</p>
+            </div>
+        </header>
+
+        <div class="content">
+            {{IMAGE_GALLERY}}
+
+            {{content}}
+
+            <div class="cta-section">
+                <h3>Ready to Explore More?</h3>
+                <p>Discover more insights and join the conversation about {{topic}}</p>
+                <a href="#" class="cta-button">Read More Articles</a>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>{{author}}</p>
+            <p>{{date}} | Generated by AI Newsletter System</p>
+            <div class="links">
+                <a href="#">Unsubscribe</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Contact</a>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
+
+<!-- Generated: {{generation_timestamp}} -->
+<!-- Images: {{image_count}} -->
+<!-- Generated by: AI Newsletter System {{version}} -->

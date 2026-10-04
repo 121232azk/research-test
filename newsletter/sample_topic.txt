@@ -1,0 +1,115 @@
+# Sample topics for testing the newsletter automation system
+# Copy any topic to use with the run_newsletter.sh script
+
+# Technology Topics
+AI automation trends 2024
+The rise of generative AI in business
+Machine learning ethics and responsible AI
+Quantum computing breakthroughs
+Web3 and decentralized technologies
+Cybersecurity trends in 2024
+Cloud computing evolution
+Edge AI and IoT integration
+Digital transformation strategies
+Future of remote work technology
+
+# Science and Research Topics
+Climate change solutions and innovations
+Renewable energy breakthroughs
+Quantum computing applications
+Neuroscience advances
+Genetic engineering and CRISPR
+Space exploration milestones
+Ocean discovery and marine biology
+Medical AI and healthcare innovation
+Clean technology startups
+Scientific research funding challenges
+
+# Business and Economy Topics
+Sustainable business models
+Circular economy principles
+ESG investing trends
+Remote work productivity
+Supply chain innovation
+Digital payment systems
+Fintech evolution
+Startups vs established companies
+Global economic recovery
+Inflation and monetary policy
+
+# Culture and Society Topics
+Remote work culture evolution
+Digital art and NFTs
+Social media mental health impacts
+Virtual reality in education
+Gig economy trends
+Work-life balance in tech
+AI and human creativity
+Digital privacy concerns
+Tech ethics and governance
+Innovation in developing countries
+
+# Environment and Sustainability
+Carbon capture technologies
+Electric vehicle adoption
+Sustainable fashion
+Zero waste initiatives
+Green hydrogen energy
+Climate adaptation strategies
+Ocean conservation
+Renewable energy storage
+Sustainable agriculture
+Plastic pollution solutions
+
+# Health and Wellness
+Telemedicine advances
+Mental health tech
+AI in drug discovery
+Wearable health monitoring
+Personalized medicine
+Wellness technology
+Sleep technology innovations
+Nutrition science
+Fitness tracking
+Preventive health technologies
+
+# Education and Learning
+AI in education
+Online learning platforms
+Microlearning and short-form content
+Skills-based hiring
+EdTech startups
+Digital classroom innovation
+Lifelong learning
+Educational technology funding
+Personalized learning
+ immersive learning experiences
+
+# Future Tech
+Neural interfaces and brain-computer
+next generation AI models
+Synthetic biology
+Space tourism
+Autonomous vehicles
+Smart city infrastructure
+5G and beyond connectivity
+Edge computing networks
+Distributed cloud computing
+Autonomous systems
+
+# Select a topic from the list and use it like this:
+# ./run_newsletter.sh "Your selected topic here"
+# ./run_newsletter.sh --dry-run "Your selected topic here"
+# ./run_newsletter.sh --preview "Your selected topic here"
+
+# Example:
+# ./run_newsletter.sh "AI automation trends 2024"
+# ./run_newsletter.sh "Climate change solutions and innovations"
+# ./run_newsletter.sh "Sustainable business models"
+
+# The system will then:
+# 1. Research the topic using Perplexity API
+# 2. Generate infographic images using Google Gemini
+# 3. Write newsletter content
+# 4. Format the complete HTML newsletter
+# 5. Send via Gmail (if configured) or save locally

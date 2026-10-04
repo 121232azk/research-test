@@ -1,0 +1,58 @@
+<div class="intro-section">
+    <h2>Introduction</h2>
+    <div class="intro-content">
+        {{intro_text}}
+    </div>
+    <div class="intro-meta">
+        <span class="word-count">Word Count: {{word_count}}</span>
+        <span class="sources-count">Sources: {{sources_count}}</span>
+    </div>
+</div>
+
+<style>
+    .intro-section {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe5 100%);
+        padding: 30px;
+        margin: 30px 0;
+        border-radius: 10px;
+        border-left: 5px solid #667eea;
+    }
+
+    .intro-section h2 {
+        color: #2d3748;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+    }
+
+    .intro-content {
+        color: #4a5568;
+        line-height: 1.8;
+        font-size: 1.1em;
+        margin-bottom: 20px;
+    }
+
+    .intro-meta {
+        display: flex;
+        gap: 20px;
+        font-size: 0.9em;
+        color: #718096;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .intro-section {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+        }
+
+        .intro-section h2 {
+            color: #e2e8f0;
+        }
+
+        .intro-content {
+            color: #cbd5e0;
+        }
+
+        .intro-meta {
+            color: #a0aec0;
+        }
+    }
+</style>

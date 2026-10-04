@@ -1,0 +1,51 @@
+<div class="footer-section">
+    <div class="footer-content">
+        <p><strong>{{author}}</strong></p>
+        <p>{{signature}}</p>
+        <p>{{date}}</p>
+        <div class="footer-links">
+            <a href="#" style="margin: 0 10px;">Unsubscribe</a>
+            <a href="#" style="margin: 0 10px;">Privacy Policy</a>
+            <a href="#" style="margin: 0 10px;">Contact</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .footer-section {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        border-radius: 10px;
+        margin: 50px 0 20px;
+    }
+
+    .footer-content p {
+        margin: 10px 0;
+        opacity: 0.9;
+    }
+
+    .footer-links {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .footer-links a {
+        color: #3498db;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+        color: #5dade2;
+        text-decoration: underline;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .footer-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+    }
+</style>
